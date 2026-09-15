@@ -32,12 +32,12 @@ export interface BackendTarget {
 
 export const PRESET_BACKENDS: BackendTarget[] = [
   { name: 'AdonisJS Reference', url: 'http://localhost:3333/api/v1', key: 'adonisjs', icon: '⚡' },
+  { name: 'Node.js (Fastify)', url: 'http://localhost:3004/api/v1', key: 'fastify', icon: '⚡' },
   { name: 'Python (FastAPI)', url: 'http://localhost:8000/api/v1', key: 'fastapi', icon: '⚡' },
   { name: 'Python (Flask)', url: 'http://localhost:5000/api/v1', key: 'flask', icon: '🐍' },
   { name: 'C# (.NET Web API)', url: 'http://localhost:5000/api/v1', key: 'dotnet', icon: '🔷' },
-  { name: 'Java (Spring Boot)', url: 'http://localhost:8080/api/v1', key: 'spring', icon: '☕' },
+  { name: 'Java (Spring Boot)', url: 'http://localhost:5002/api/v1', key: 'spring', icon: '☕' },
   { name: 'Java (Quarkus)', url: 'http://localhost:8080/api/v1', key: 'quarkus', icon: '⚡' },
-
 ]
 
 export const getActiveBackendKey = (): string => {
@@ -49,9 +49,10 @@ export const getActiveBackendKey = (): string => {
   // Detect based on URL if not explicitly set
   const currentUrl = getApiBaseUrl()
   if (currentUrl === '/api/v1' || currentUrl === '/api') return 'express'
+  if (currentUrl.includes(':3004')) return 'fastify'
   if (currentUrl.includes(':8000')) return 'fastapi'
   if (currentUrl.includes(':5000')) return 'dotnet'
-  if (currentUrl.includes(':8080')) return 'spring'
+  if (currentUrl.includes(':5002') || currentUrl.includes(':8080')) return 'spring'
   if (currentUrl.includes(':3000')) return 'rails'
 
   return 'custom'
@@ -62,6 +63,11 @@ export const getApiBaseUrl = (): string => {
   if (custom && custom.trim()) {
     return custom.trim()
   }
+  
+  if (import.meta.env.PROD) {
+    return import.meta.env.VITE_API_BASE_URL || '/api/v1'
+  }
+
   return (import.meta as any).env.VITE_API_BASE_URL || '/api/v1'
 }
 

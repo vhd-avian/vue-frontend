@@ -6,9 +6,13 @@
           <span class="bg-blue-600 text-white p-1 rounded text-xs font-mono font-bold">IT</span>
           IssueTracker Pro
         </router-link>
-        <div v-if="auth.isAuthenticated" class="flex items-center gap-4 text-sm font-medium">
-          <router-link to="/" class="text-gray-600 hover:text-blue-600 transition">Dashboard</router-link>
-          <router-link to="/profile" class="text-gray-600 hover:text-blue-600 transition">Profile</router-link>
+        <div class="flex items-center gap-4 text-sm font-medium">
+          <router-link v-if="auth.isAuthenticated" to="/" class="text-gray-600 hover:text-blue-600 transition">Dashboard</router-link>
+          <router-link v-if="auth.isAuthenticated" to="/profile" class="text-gray-600 hover:text-blue-600 transition">Profile</router-link>
+          <router-link to="/patterns" class="text-indigo-600 hover:text-indigo-800 font-semibold transition flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 rounded-lg">
+            <span>🧪</span>
+            <span>Java Patterns Lab</span>
+          </router-link>
         </div>
       </div>
       <div class="flex items-center gap-3">

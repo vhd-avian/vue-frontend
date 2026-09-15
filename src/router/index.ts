@@ -4,6 +4,7 @@ import DashboardView from '@/views/DashboardView.vue'
 import ProjectBoardView from '@/views/ProjectBoardView.vue'
 import IssueDetailView from '@/views/IssueDetailView.vue'
 import UserProfileView from '@/views/UserProfileView.vue'
+import PatternsView from '@/views/PatternsView.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const routes = [
@@ -12,6 +13,7 @@ const routes = [
   { path: '/projects/:id', component: ProjectBoardView, meta: { requiresAuth: true } },
   { path: '/issues/:id', component: IssueDetailView, meta: { requiresAuth: true } },
   { path: '/profile', component: UserProfileView, meta: { requiresAuth: true } },
+  { path: '/patterns', component: PatternsView, meta: { requiresAuth: false } },
 ]
 
 const router = createRouter({

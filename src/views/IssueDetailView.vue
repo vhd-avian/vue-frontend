@@ -5,6 +5,40 @@
       <span class="ml-3 text-gray-500 font-medium">Loading issue details...</span>
     </div>
 
+    <!-- ===== Page-level Error State (403 / 404) ===== -->
+    <div v-else-if="pageError" class="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+      <div class="mb-6">
+        <span v-if="pageError.code === 403" class="text-8xl">🔒</span>
+        <span v-else class="text-8xl">🔍</span>
+      </div>
+      <h1 class="text-3xl font-extrabold text-gray-900 mb-2">
+        {{ pageError.code === 403 ? 'Access Denied' : 'Issue Not Found' }}
+      </h1>
+      <p class="text-gray-500 text-sm max-w-sm mb-8">
+        {{ pageError.code === 403
+          ? "You don't have permission to view this issue."
+          : "This issue doesn't exist or may have been deleted."
+        }}
+      </p>
+      <div class="flex items-center gap-3">
+        <button
+          @click="router.go(-1)"
+          class="inline-flex items-center gap-2 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition"
+        >
+          ← Go Back
+        </button>
+        <router-link
+          to="/"
+          class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          All Projects
+        </router-link>
+      </div>
+    </div>
+
     <div v-else-if="issue" class="space-y-6">
       <!-- Top Bar / Breadcrumb -->
       <div class="flex justify-between items-center">
@@ -337,6 +371,9 @@ const savingDetails = ref(false)
 const postingComment = ref(false)
 const transitioning = ref(false)
 
+// Page-level error state (403 / 404)
+const pageError = ref<{ code: number; message: string } | null>(null)
+
 // All possible statuses
 const allStatuses = ['backlog', 'todo', 'in_progress', 'in_review', 'done']
 
@@ -400,12 +437,15 @@ const loadIssue = async () => {
     }
   } catch (e: any) {
     const status = e?.response?.status
-    const message = getApiErrorMessage(e, 'Failed to load issue')
     console.error('Failed to load issue:', e)
-    toast.error(message)
 
     if (status === 403 || status === 404) {
-      router.replace('/')
+      pageError.value = {
+        code: status,
+        message: e?.response?.data?.message || (status === 403 ? 'Access denied' : 'Issue not found'),
+      }
+    } else {
+      toast.error(getApiErrorMessage(e, 'Failed to load issue'))
     }
   } finally {
     loading.value = false
