@@ -131,15 +131,16 @@ export interface IssueCreateRequest {
   title: string
   description?: string
   type: 'task' | 'bug' | 'story'
+  status?: 'backlog' | 'todo' | 'in_progress' | 'in_review' | 'done'
   priority?: 'lowest' | 'low' | 'medium' | 'high' | 'highest'
   story_points?: number
   storyPoints?: number
-  assignee_id?: string
-  assigneeId?: string
+  assignee_id?: string | null
+  assigneeId?: string | null
   project_id?: string
   projectId?: string
-  sprint_id?: string
-  sprintId?: string
+  sprint_id?: string | null
+  sprintId?: string | null
   parent_issue_id?: string
   due_date?: string
 }
