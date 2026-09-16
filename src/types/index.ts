@@ -96,12 +96,14 @@ export interface SprintCreateRequest {
   endDate?: string | null
 }
 
+export type IssueStatus = 'backlog' | 'todo' | 'in_progress' | 'in_review' | 'done'
+
 export interface IssueDto {
   id: string
   title: string
   description?: string
   type: 'task' | 'bug' | 'story'
-  status: 'backlog' | 'todo' | 'in_progress' | 'in_review' | 'done'
+  status: IssueStatus
   priority: 'lowest' | 'low' | 'medium' | 'high' | 'highest'
   story_points?: number | null
   storyPoints?: number | null
@@ -131,7 +133,7 @@ export interface IssueCreateRequest {
   title: string
   description?: string
   type: 'task' | 'bug' | 'story'
-  status?: 'backlog' | 'todo' | 'in_progress' | 'in_review' | 'done'
+  status?: IssueStatus
   priority?: 'lowest' | 'low' | 'medium' | 'high' | 'highest'
   story_points?: number
   storyPoints?: number

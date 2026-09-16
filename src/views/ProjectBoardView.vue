@@ -778,7 +778,7 @@ import { useProjectStore } from '@/stores/projects'
 import { useIssueStore } from '@/stores/issues'
 import { useSprintStore } from '@/stores/sprints'
 import { useAuthStore } from '@/stores/auth'
-import type { ProjectDto, UserDto, SprintDto, ProjectMemberDto, IssueDto } from '@/types'
+import type { ProjectDto, UserDto, SprintDto, ProjectMemberDto, IssueDto, IssueStatus } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -792,7 +792,7 @@ const toast = useToast()
 
 const activeTab = ref<'board' | 'sprints' | 'members' | 'settings'>('board')
 const project = ref<ProjectDto | null>(null)
-const statuses = ['backlog', 'todo', 'in_progress', 'in_review', 'done']
+const statuses: IssueStatus[] = ['backlog', 'todo', 'in_progress', 'in_review', 'done']
 const selectedSprintFilter = ref('all')
 const assigneeSearch = ref('')
 
@@ -800,7 +800,7 @@ const assigneeSearch = ref('')
 const draggedIssueId = ref<string | null>(null)
 const draggedIssue = ref<IssueDto | null>(null)
 const isDragOver = ref(false)
-const dragOverStatus = ref<string | null>(null)
+const dragOverStatus = ref<IssueStatus | null>(null)
 
 // Modals
 const showCreateIssueModal = ref(false)
@@ -935,7 +935,7 @@ const handleDragEnd = () => {
   document.body.style.cursor = 'default'
 }
 
-const handleDragOver = (status: string) => {
+const handleDragOver = (status: IssueStatus) => {
   isDragOver.value = true
   dragOverStatus.value = status
 }
@@ -945,7 +945,7 @@ const handleDragLeave = () => {
   dragOverStatus.value = null
 }
 
-const handleDrop = async (targetStatus: string) => {
+const handleDrop = async (targetStatus: IssueStatus) => {
   isDragOver.value = false
   dragOverStatus.value = null
 

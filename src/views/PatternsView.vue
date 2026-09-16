@@ -61,7 +61,7 @@
             <span>{{ cat.icon }}</span>
             <span>{{ cat.label }}</span>
             <span class="text-[10px] px-1.5 py-0.2 rounded-full" :class="selectedCategory === cat.id ? 'bg-indigo-100 text-indigo-800' : 'bg-indigo-900/60 text-indigo-300'">
-              {{ cat.endpoints.length }}
+              {{ getCategoryCount(cat.id) }}
             </span>
           </button>
         </div>
@@ -421,6 +421,11 @@ const filteredEndpoints = computed(() => {
   if (selectedCategory.value === 'all') return endpoints
   return endpoints.filter((e) => e.category === selectedCategory.value)
 })
+
+const getCategoryCount = (catId: string) => {
+  if (catId === 'all') return endpoints.length
+  return endpoints.filter((e) => e.category === catId).length
+}
 
 const checkHealth = async () => {
   try {

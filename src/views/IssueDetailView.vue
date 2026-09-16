@@ -112,7 +112,7 @@
               <div class="shrink-0">
                 <select
                   :value="issue.status"
-                  @change="handleStatusChange(($event.target as HTMLSelectElement).value)"
+                  @change="handleStatusChange(($event.target as HTMLSelectElement).value as IssueStatus)"
                   :disabled="transitioning"
                   class="text-xs font-bold uppercase border-2 rounded-lg px-3 py-2 bg-white outline-none cursor-pointer transition"
                   :class="getStatusColor(issue.status)"
@@ -354,6 +354,7 @@ import { useToast } from '@/composables/useToast'
 import { useIssueStore } from '@/stores/issues'
 import { useProjectStore } from '@/stores/projects'
 import { useSprintStore } from '@/stores/sprints'
+import type { IssueStatus } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -373,9 +374,6 @@ const transitioning = ref(false)
 
 // Page-level error state (403 / 404)
 const pageError = ref<{ code: number; message: string } | null>(null)
-
-// All possible statuses
-const allStatuses = ['backlog', 'todo', 'in_progress', 'in_review', 'done']
 
 // Edit form for sidebar details
 const editForm = reactive({
@@ -476,7 +474,7 @@ const getStatusBadgeColor = (status: string) => {
 }
 
 // ---- Status change handler ----
-const handleStatusChange = async (newStatus: string) => {
+const handleStatusChange = async (newStatus: IssueStatus) => {
   if (newStatus === issue.value.status) return
   
   transitioning.value = true
